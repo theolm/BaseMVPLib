@@ -3,10 +3,11 @@ package com.theomota.basemvplib
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlin.coroutines.CoroutineContext
 
 abstract class BasePresenter<V : BaseView> : CoroutineScope {
-    private val job = Job()
+    private val job = SupervisorJob()
 
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
