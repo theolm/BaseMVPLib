@@ -1,2 +1,2 @@
-include ':app', ':basemvplib'
+include ':app'
 rootProject.name='TestLib'
