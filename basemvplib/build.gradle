@@ -25,6 +25,10 @@ android {
 
 }
 
+tasks.withType(Javadoc).all {
+    enabled = false
+}
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -41,3 +45,28 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
+
+ext {
+    bintrayRepo = 'BaseMVP' // Repo name in bintray dashboard
+    bintrayName = 'basemvplib' // package name of the bintray repo
+
+    publishedGroupId = 'com.theolm'   // this is the ID we want to see in implementation line
+    libraryName = 'BaseMVP'     // this is the module name of library
+    artifact = 'basemvp'        // this is the artifact we want to see in implementation line
+
+    libraryDescription = 'Base MVP Lib' // description of library
+
+    siteUrl = 'https://github.com/theolm/BaseMVPLib'    // git repo url
+    gitUrl = 'https://github.com/theolm/BaseMVPLib.git' // git repo vcs url
+
+    libraryVersion = '1.0.0'      // library version
+
+    developerId = 'theolm'                // This is your bintray username
+    developerName = 'Theodoro L. Mota'              // Developer's name
+    developerEmail = 'theolm.mota@gmail.com'                // Developer's email
+
+    licenseName = 'The Apache Software License, Version 2.0'  // for example, The Apache Software License, Version 2.0
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'   // for example, http://www.apache.org/licenses/LICENSE-2.0.txt
+    allLicenses = ["Apache-2.0"]    // array of licenses, for example, ["Apache-2.0"]
+}
+apply from: 'publish.gradle'
