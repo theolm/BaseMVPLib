@@ -61,15 +61,51 @@ fun View.animateShow(duration: Long = 300, animation: Transition = Fade()) {
     this.visibility = View.VISIBLE
 }
 
-fun View.setHeight(height: Int) {
+fun View.setHeight(height: Int, toDip: Boolean) {
     val params = this.layoutParams
-    params.height = context.dip(height)
+    params.height =
+        if (toDip) {
+            context.dip(height)
+        } else {
+            height
+        }
+
+    this.layoutParams = params
+}
+
+fun View.setWidth(width: Int, toDip: Boolean) {
+    val params = this.layoutParams
+    params.width =
+        if (toDip) {
+            context.dip(width)
+        } else {
+            width
+        }
+
+    this.layoutParams = params
+}
+
+fun View.setWidthWrap() {
+    val params = this.layoutParams
+    params.width = ViewGroup.LayoutParams.WRAP_CONTENT
     this.layoutParams = params
 }
 
 fun View.setHeightWrap() {
     val params = this.layoutParams
     params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+    this.layoutParams = params
+}
+
+fun View.setWidthMatch() {
+    val params = this.layoutParams
+    params.width = ViewGroup.LayoutParams.MATCH_PARENT
+    this.layoutParams = params
+}
+
+fun View.setHeightMatch() {
+    val params = this.layoutParams
+    params.height = ViewGroup.LayoutParams.MATCH_PARENT
     this.layoutParams = params
 }
 
