@@ -23,6 +23,11 @@ abstract class RootActivity<V : BaseView> : AppCompatActivity(), KodeinAware, Ba
 
     protected abstract fun initializePresenter()
 
+    override fun onResume() {
+        super.onResume()
+        presenter.resume()
+    }
+
     override fun onPause() {
         super.onPause()
         presenter.pause()

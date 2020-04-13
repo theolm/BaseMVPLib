@@ -1,21 +1,27 @@
 package com.theomota.testlib
 
+import android.util.Log
 import com.theomota.basemvplib.BasePresenter
 
 class MainPresenter : BasePresenter<MainView>() {
+
     override fun initialize() {
-        //TODO("not implemented")
+        Log.d("MVPLIB", "initialize presenter")
+    }
+
+    override fun resume() {
+        Log.d("MVPLIB", "resume presenter")
     }
 
     override fun pause() {
-        //TODO("not implemented")
+        Log.d("MVPLIB", "pause presenter")
     }
 
     override fun stop() {
-        //TODO("not implemented")
+        Log.d("MVPLIB", "stop presenter")
     }
 
     override fun destroy() {
-        //TODO("not implemented")
+        Log.d("MVPLIB", "destroy presenter")
     }
 }

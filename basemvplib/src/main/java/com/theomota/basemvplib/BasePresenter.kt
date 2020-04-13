@@ -22,12 +22,14 @@ abstract class BasePresenter<V : BaseView> : CoroutineScope {
         this.initialize()
     }
 
-    abstract fun initialize()
+    open fun initialize() {}
 
-    abstract fun pause()
+    open fun resume() {}
 
-    abstract fun stop()
+    open fun pause() {}
 
-    abstract fun destroy()
+    open fun stop() {}
+
+    open fun destroy() {}
 
 }

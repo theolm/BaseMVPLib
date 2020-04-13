@@ -27,7 +27,12 @@ abstract class RootFragment<V : BaseView> : Fragment(), KodeinAware, BaseView {
     protected abstract fun initializeUI()
 
     protected abstract fun initializePresenter()
-    
+
+    override fun onResume() {
+        super.onResume()
+        presenter.resume()
+    }
+
     override fun onPause() {
         super.onPause()
         presenter.pause()
