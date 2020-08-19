@@ -7,6 +7,7 @@ import android.transition.Transition
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.core.content.ContextCompat
 import org.jetbrains.anko.dip
 
@@ -115,4 +116,15 @@ fun View.getRippleDrawable(colorRes: Int, view: View): RippleDrawable {
         view.background,
         null
     )
+}
+
+fun View.executeAfterLayout(func: () -> Unit) {
+    val view = this
+    view.viewTreeObserver.addOnGlobalLayoutListener(object :
+        ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            func.invoke()
+            view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+        }
+    })
 }
