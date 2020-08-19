@@ -1,4 +1,7 @@
 # BaseMVP
+
+![version](https://img.shields.io/badge/version-1.3.1-blue)
+
 ## To use the lib
 
 Add the repository to the gradle project:
