@@ -15,8 +15,8 @@ abstract class RootActivity<V : BaseView> : AppCompatActivity(), KodeinAware, Ba
         super.onCreate(savedInstanceState)
         setContentView(layoutResourceId)
 
-        initializeUI()
         initializePresenter()
+        initializeUI()
     }
 
     protected abstract fun initializeUI()

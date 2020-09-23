@@ -1,6 +1,6 @@
 # BaseMVP
 
-![version](https://img.shields.io/badge/version-1.3.1-blue)
+![version](https://img.shields.io/badge/version-1.3.2-blue)
 
 ## To use the lib
 
@@ -15,7 +15,7 @@ allprojects {
 
 Add the lib to the app gradle:
 ```
-implementation 'com.theolm:basemvp:1.3.1'
+implementation 'com.theolm:basemvp:1.3.2'
 ```
 
 ## To publish a new version

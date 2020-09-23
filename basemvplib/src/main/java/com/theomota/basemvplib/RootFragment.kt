@@ -20,8 +20,8 @@ abstract class RootFragment<V : BaseView> : Fragment(), KodeinAware, BaseView {
 
     override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeUI()
         initializePresenter()
+        initializeUI()
     }
 
     protected abstract fun initializeUI()
