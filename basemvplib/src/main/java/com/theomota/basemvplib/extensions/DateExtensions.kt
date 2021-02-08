@@ -1,15 +1,24 @@
 package com.theomota.basemvplib.extensions
 
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.*
 
-fun Date.fromJavascriptDate(jsDate: String) : Date {
-    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+private const val ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+
+fun String.toIsoDate() : Date {
+    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
     formatter.timeZone = TimeZone.getTimeZone("UTC")
-    return formatter.parse(jsDate)!!
+    return formatter.parse(this)!!
 }
 
-fun Date.toFormat(pattern: String) : String = SimpleDateFormat(pattern).format(this)
+fun Long.toIsoDate() : Date = Date(this)
+
+fun Int.toIsoDate() : Date = Date(this.toLong())
+
+fun Date.toIsoString(): String = SimpleDateFormat(ISO_DATE_FORMAT, Locale("pt","BR")).format(this)
+
+fun Date.toFormat(pattern: String) : String = SimpleDateFormat(pattern, Locale.getDefault()).format(this)
 
 fun Date.intervalFromNow() : String {
     val now = Date()

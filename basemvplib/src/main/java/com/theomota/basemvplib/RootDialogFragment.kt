@@ -6,13 +6,18 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
+import androidx.viewbinding.ViewBinding
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 
 
-abstract class RootDialogFragment<V : BaseView> : DialogFragment(), KodeinAware, BaseView {
+abstract class RootDialogFragment<V : BaseView, VB : ViewBinding> : DialogFragment(), KodeinAware, BaseView {
 
-    protected abstract val layoutResourceId: Int
+    private var _binding: ViewBinding? = null
+    abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
+    @Suppress("UNCHECKED_CAST")
+    protected val binding: VB
+        get() = _binding as VB
     protected abstract val presenter: BasePresenter<V>
     override val kodein by kodein()
 
@@ -21,7 +26,8 @@ abstract class RootDialogFragment<V : BaseView> : DialogFragment(), KodeinAware,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): android.view.View? {
-        return inflater.inflate(layoutResourceId, container, false)
+        _binding = bindingInflater.invoke(inflater, container, false)
+        return requireNotNull(_binding).root
     }
 
     override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
@@ -52,6 +58,11 @@ abstract class RootDialogFragment<V : BaseView> : DialogFragment(), KodeinAware,
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroy()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     fun setFullWidth(){

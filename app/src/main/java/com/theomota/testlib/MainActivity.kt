@@ -1,21 +1,17 @@
 package com.theomota.testlib
 
-import android.os.Bundle
+import android.view.LayoutInflater
 import com.theomota.basemvplib.RootActivity
+import com.theomota.testlib.databinding.ActivityMainBinding
 import org.kodein.di.generic.instance
 
-class MainActivity : RootActivity<MainView>(), MainView {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-    }
-
-    override val layoutResourceId: Int = R.layout.activity_main
+class MainActivity : RootActivity<MainView, ActivityMainBinding>(), MainView {
+    override val bindingInflater: (LayoutInflater) -> ActivityMainBinding
+        get() = ActivityMainBinding::inflate
     override val presenter: MainPresenter by instance()
 
     override fun initializeUI() {
-        //TODO("not implemented")
+        binding.mainText.text = "lol"
     }
 
     override fun initializePresenter() {
@@ -29,4 +25,6 @@ class MainActivity : RootActivity<MainView>(), MainView {
     override fun showError(message: String) {
         //TODO("not implemented")
     }
+
+
 }

@@ -4,18 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 
 
-abstract class RootFragment<V : BaseView> : Fragment(), KodeinAware, BaseView {
+abstract class RootFragment<V : BaseView, VB : ViewBinding> : Fragment(), KodeinAware, BaseView {
 
-    protected abstract val layoutResourceId: Int
+    private var _binding: ViewBinding? = null
+    abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
+    @Suppress("UNCHECKED_CAST")
+    protected val binding: VB
+        get() = _binding as VB
     protected abstract val presenter: BasePresenter<V>
     override val kodein by kodein()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): android.view.View? {
-        return inflater.inflate(layoutResourceId, container, false)
+        _binding = bindingInflater.invoke(inflater, container, false)
+        return requireNotNull(_binding).root
     }
 
     override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
@@ -27,6 +33,8 @@ abstract class RootFragment<V : BaseView> : Fragment(), KodeinAware, BaseView {
     protected abstract fun initializeUI()
 
     protected abstract fun initializePresenter()
+
+
 
     override fun onResume() {
         super.onResume()
@@ -41,6 +49,11 @@ abstract class RootFragment<V : BaseView> : Fragment(), KodeinAware, BaseView {
     override fun onStop() {
         super.onStop()
         presenter.stop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onDestroy() {
