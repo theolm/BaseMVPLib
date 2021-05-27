@@ -1,7 +1,16 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'maven-publish'
+}
 
 def libVersion = '1.4.1'
+
+def githubProperties = new Properties()
+githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+
+def getVersionName = { -> return "1.4.3" }
+def getArtifactId = { -> return "basemvplib" }
 
 android {
     compileSdkVersion 30
@@ -61,27 +70,84 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
 
-ext {
-    bintrayRepo = 'BaseMVP' // Repo name in bintray dashboard
-    bintrayName = 'basemvplib' // package name of the bintray repo
+publishing {
+    publications {
+        bar(MavenPublication) {
+            groupId 'com.theolm'
+            artifactId getArtifactId()
+            version getVersionName()
+            artifact("$buildDir/outputs/aar/${getArtifactId()}-release.aar")
 
-    publishedGroupId = 'com.theolm'   // this is the ID we want to see in implementation line
-    libraryName = 'BaseMVP'     // this is the module name of library
-    artifact = 'basemvp'        // this is the artifact we want to see in implementation line
+            pom.withXml {
+                final dependenciesNode = asNode().appendNode('dependencies')
 
-    libraryDescription = 'Base MVP Lib' // description of library
+                ext.addDependency = { Dependency dep, String scope ->
+                    if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
+                        return // ignore invalid dependencies
 
-    siteUrl = 'https://github.com/theolm/BaseMVPLib'    // git repo url
-    gitUrl = 'https://github.com/theolm/BaseMVPLib.git' // git repo vcs url
+                    final dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', dep.group)
+                    dependencyNode.appendNode('artifactId', dep.name)
+                    dependencyNode.appendNode('version', dep.version)
+                    dependencyNode.appendNode('scope', scope)
 
-    libraryVersion = libVersion     // library version
+                    if (!dep.transitive) {
+                        // If this dependency is transitive, we should force exclude all its dependencies them from the POM
+                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                        exclusionNode.appendNode('groupId', '*')
+                        exclusionNode.appendNode('artifactId', '*')
+                    } else if (!dep.properties.excludeRules.empty) {
+                        // Otherwise add specified exclude rules
+                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                        dep.properties.excludeRules.each { ExcludeRule rule ->
+                            exclusionNode.appendNode('groupId', rule.group ?: '*')
+                            exclusionNode.appendNode('artifactId', rule.module ?: '*')
+                        }
+                    }
+                }
+                // List all "compile" dependencies (for old Gradle)
+                configurations.compile.getAllDependencies().each { dep -> addDependency(dep, "compile") }
+                // List all "api" dependencies (for new Gradle) as "compile" dependencies
+                configurations.api.getAllDependencies().each { dep -> addDependency(dep, "compile") }
+                // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
+                configurations.implementation.getAllDependencies().each { dep -> addDependency(dep, "runtime") }
+            }
+        }
+    }
 
-    developerId = 'theolm'                // This is your bintray username
-    developerName = 'Theodoro L. Mota'              // Developer's name
-    developerEmail = 'theolm.mota@gmail.com'                // Developer's email
-
-    licenseName = 'The Apache Software License, Version 2.0'  // for example, The Apache Software License, Version 2.0
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'   // for example, http://www.apache.org/licenses/LICENSE-2.0.txt
-    allLicenses = ["Apache-2.0"]    // array of licenses, for example, ["Apache-2.0"]
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/mockatech/MockaLibs")
+            credentials {
+                username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
+                password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
+            }
+        }
+    }
 }
-apply from: 'publish.gradle'
+
+//ext {
+//    bintrayRepo = 'BaseMVP' // Repo name in bintray dashboard
+//    bintrayName = 'basemvplib' // package name of the bintray repo
+//
+//    publishedGroupId = 'com.theolm'   // this is the ID we want to see in implementation line
+//    libraryName = 'BaseMVP'     // this is the module name of library
+//    artifact = 'basemvp'        // this is the artifact we want to see in implementation line
+//
+//    libraryDescription = 'Base MVP Lib' // description of library
+//
+//    siteUrl = 'https://github.com/theolm/BaseMVPLib'    // git repo url
+//    gitUrl = 'https://github.com/theolm/BaseMVPLib.git' // git repo vcs url
+//
+//    libraryVersion = libVersion     // library version
+//
+//    developerId = 'theolm'                // This is your bintray username
+//    developerName = 'Theodoro L. Mota'              // Developer's name
+//    developerEmail = 'theolm.mota@gmail.com'                // Developer's email
+//
+//    licenseName = 'The Apache Software License, Version 2.0'  // for example, The Apache Software License, Version 2.0
+//    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'   // for example, http://www.apache.org/licenses/LICENSE-2.0.txt
+//    allLicenses = ["Apache-2.0"]    // array of licenses, for example, ["Apache-2.0"]
+//}
+//apply from: 'publish.gradle'
