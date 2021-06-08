@@ -55,14 +55,10 @@ abstract class RootDialogFragment<V : BaseView, VB : ViewBinding> : DialogFragme
         presenter.stop()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.destroy()
-    }
-
     override fun onDestroyView() {
-        super.onDestroyView()
+        presenter.destroy()
         _binding = null
+        super.onDestroyView()
     }
 
     fun setFullWidth(){
@@ -76,5 +72,7 @@ abstract class RootDialogFragment<V : BaseView, VB : ViewBinding> : DialogFragme
         params?.height = LinearLayout.LayoutParams.MATCH_PARENT
         dialog?.window?.attributes = params as WindowManager.LayoutParams
     }
+
+    override fun isBindingNotNull(): Boolean = _binding != null
 
 }
