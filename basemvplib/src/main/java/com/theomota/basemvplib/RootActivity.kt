@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
+import org.jetbrains.anko.design.snackbar
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 
@@ -51,4 +52,14 @@ abstract class RootActivity<V : BaseView, VB : ViewBinding> : AppCompatActivity(
         presenter.destroy()
         _binding = null
     }
+
+    override fun showError(message: String) {
+        _binding?.root?.snackbar(message)
+    }
+
+    override fun showError(messageId: Int) {
+        _binding?.root?.snackbar(messageId)
+    }
+
+    override fun isBindingNotNull(): Boolean = _binding != null
 }

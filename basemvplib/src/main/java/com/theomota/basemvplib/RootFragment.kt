@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import org.jetbrains.anko.design.snackbar
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 
@@ -34,8 +35,6 @@ abstract class RootFragment<V : BaseView, VB : ViewBinding> : Fragment(), Kodein
 
     protected abstract fun initializePresenter()
 
-
-
     override fun onResume() {
         super.onResume()
         presenter.resume()
@@ -54,11 +53,16 @@ abstract class RootFragment<V : BaseView, VB : ViewBinding> : Fragment(), Kodein
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
         presenter.destroy()
     }
 
+    override fun showError(message: String) {
+        _binding?.root?.snackbar(message)
+    }
+
+    override fun showError(messageId: Int) {
+        _binding?.root?.snackbar(messageId)
+    }
+
+    override fun isBindingNotNull(): Boolean = _binding != null
 }

@@ -1,9 +1,6 @@
 package com.theomota.basemvplib
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 abstract class BasePresenter<V : BaseView> : CoroutineScope {
@@ -30,6 +27,8 @@ abstract class BasePresenter<V : BaseView> : CoroutineScope {
 
     open fun stop() {}
 
-    open fun destroy() {}
+    open fun destroy() {
+        this.cancel()
+    }
 
 }

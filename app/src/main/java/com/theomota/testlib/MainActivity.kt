@@ -18,13 +18,4 @@ class MainActivity : RootActivity<MainView, ActivityMainBinding>(), MainView {
         presenter.start(this)
     }
 
-    override fun showError(messageId: Int) {
-        //TODO("not implemented")
-    }
-
-    override fun showError(message: String) {
-        //TODO("not implemented")
-    }
-
-
 }
