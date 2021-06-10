@@ -16,8 +16,8 @@ abstract class RootDialogFragment<V : BaseView, VB : ViewBinding> : DialogFragme
     private var _binding: ViewBinding? = null
     abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
     @Suppress("UNCHECKED_CAST")
-    protected val binding: VB
-        get() = _binding as VB
+    protected val binding: VB?
+        get() = _binding as VB?
     protected abstract val presenter: BasePresenter<V>
     override val kodein by kodein()
 

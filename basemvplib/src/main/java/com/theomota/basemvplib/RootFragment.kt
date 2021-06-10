@@ -15,8 +15,8 @@ abstract class RootFragment<V : BaseView, VB : ViewBinding> : Fragment(), Kodein
     private var _binding: ViewBinding? = null
     abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
     @Suppress("UNCHECKED_CAST")
-    protected val binding: VB
-        get() = _binding as VB
+    protected val binding: VB?
+        get() = _binding as VB?
     protected abstract val presenter: BasePresenter<V>
     override val kodein by kodein()
 
@@ -57,11 +57,11 @@ abstract class RootFragment<V : BaseView, VB : ViewBinding> : Fragment(), Kodein
     }
 
     override fun showError(message: String) {
-        _binding?.root?.snackbar(message)
+        binding?.root?.snackbar(message)
     }
 
     override fun showError(messageId: Int) {
-        _binding?.root?.snackbar(messageId)
+        binding?.root?.snackbar(messageId)
     }
 
     override fun isBindingNotNull(): Boolean = _binding != null

@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
 }
 
-def libVersion = '1.5.1'
+def libVersion = '1.5.2'
 
 def githubProperties = new Properties()
 githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
